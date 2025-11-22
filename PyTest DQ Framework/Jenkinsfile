@@ -22,7 +22,8 @@ pipeline {
                 // Make sure the html_report directory exists before running pytest
                 sh '''
                     . .venv/bin/activate
-                    mkdir -p "PyTest DQ Framework/html_report"
+                    cd "PyTest DQ Framework"
+                    mkdir -p "html_report"
                     pytest tests -m "parquet_data" \
                         --db_host="postgres" \
                         --db_port="5434" \
