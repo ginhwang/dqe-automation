@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    environment {
+        // This will create POSTGRES_SECRET_USR and POSTGRES_SECRET_PSW environment variables
+        POSTGRES_SECRET = credentials('jenkins-postgres-credentials')
+    }
+
+    stages {
+        stage('Run Pytest') {
+            steps {
+                // Make sure the html_report directory exists before running pytest
+                sh '''
+                    mkdir -p "PyTest DQ Framework/html_report"
+                    pytest tests -m "parquet_data" \
+                        --db_host="postgres" \
+                        --db_port="5434" \
+                        --db_name="mydatabase" \
+                        --db_user="$POSTGRES_SECRET_USR" \
+                        --db_password="$POSTGRES_SECRET_PSW" \
+                        --html="PyTest DQ Framework/html_report/index.html"
+                '''
+            }
+        }
+
+        stage('Archive Test Report') {
+            steps {
+                // Archive the entire html_report directory, including assets
+                archiveArtifacts artifacts: 'PyTest DQ Framework/html_report/**', allowEmptyArchive: true
+
+                // Publish the HTML report
+                publishHTML(target: [
+                    allowMissing: false,  // Fail the pipeline if the report is missing
+                    keepAll: true,        // Keep all reports from previous runs
+                    reportDir: 'PyTest DQ Framework/html_report', // Correct directory path
+                    reportFiles: 'index.html',                    // Entry point file
+                    reportName: 'HTML Test Report'                // Display name in Jenkins
+                ])
+            }
+        }
+    }
+}
