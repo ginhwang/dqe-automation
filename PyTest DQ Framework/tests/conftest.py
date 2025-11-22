@@ -1,3 +1,5 @@
+print("conftest.py loaded")
+
 import pytest
 from src.connectors.postgres.postgres_connector import PostgresConnectorContextManager
 from src.data_quality.data_quality_validation_library import DataQualityLibrary
