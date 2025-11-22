@@ -7,6 +7,13 @@ pipeline {
     }
 
     stages {
+        stage('Install Dependencies') {
+            steps {
+                // Install dependencies from requirements.txt
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
         stage('Run Pytest') {
             steps {
                 // Make sure the html_report directory exists before running pytest
