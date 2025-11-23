@@ -30,7 +30,7 @@ pipeline {
                         --db_name="mydatabase" \
                         --db_user="$POSTGRES_SECRET_USR" \
                         --db_password="$POSTGRES_SECRET_PSW" \
-                        --html="PyTest DQ Framework/html_report/index.html"
+                        --html="html_report/index.html"
                 '''
                 sh 'ls -l "PyTest DQ Framework/html_report"'
             }
