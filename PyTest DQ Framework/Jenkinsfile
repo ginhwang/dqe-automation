@@ -37,6 +37,8 @@ pipeline {
 
         stage('Archive Test Report') {
             steps {
+                sh 'ls -l "PyTest DQ Framework/html_report"'
+
                 // Archive the entire html_report directory, including assets
                 archiveArtifacts artifacts: 'PyTest DQ Framework/html_report/**', allowEmptyArchive: true
 
