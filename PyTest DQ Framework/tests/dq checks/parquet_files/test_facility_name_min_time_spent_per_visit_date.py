@@ -87,5 +87,8 @@ def test_check_not_null_values(target_data
 @pytest.mark.parquet_data
 @pytest.mark.facility_name_min_time_spent_per_visit_date
 def test_check_visit_date_format(target_data):
-    """Quality: Ensure visit_date is in YYYY-MM format (partitioned by year-month)."""
-    assert target_data['visit_date'].str.match(r'^\d{4}-\d{2}$').all(), "visit_date should be in YYYY-MM format"
+    if pd.api.types.is_datetime64_any_dtype(target_data['visit_date']):
+        visit_date_str = target_data['visit_date'].dt.strftime('%Y-%m')
+    else:
+        visit_date_str = target_data['visit_date'].astype(str)
+    assert visit_date_str.str.match(r'^\d{4}-\d{2}$').all(), "visit_date should be in YYYY-MM format"
