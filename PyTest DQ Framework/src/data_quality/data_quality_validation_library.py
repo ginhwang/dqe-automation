@@ -25,7 +25,9 @@ class DataQualityLibrary:
 
     @staticmethod
     def check_data_full_data_set(df1, df2):
-        assert df1 == df2, "Datasets are not equal."
+        assert df1.shape == df2.shape, f"Shape mismatch: source {df1.shape}, target {df2.shape}"
+        assert list(df1.columns) == list(df2.columns), f"Column mismatch: source {list(df1.columns)}, target {list(df2.columns)}"
+        assert df1.reset_index(drop=True).equals(df2.reset_index(drop=True)), "Source and target data values do not match."
 
     @staticmethod
     def check_dataset_is_not_empty(df):
