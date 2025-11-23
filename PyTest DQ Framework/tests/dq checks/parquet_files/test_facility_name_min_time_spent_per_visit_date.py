@@ -5,6 +5,7 @@ Author(s): Regina Khvan
 """
 
 import pytest
+import pandas as pd
 
 
 @pytest.fixture(scope='module')
