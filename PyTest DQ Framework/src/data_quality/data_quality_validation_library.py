@@ -21,7 +21,7 @@ class DataQualityLibrary:
 
     @staticmethod
     def check_count(df1, df2):
-        assert df1.count == df2.count, f"Row count mismatch: {count1} != {count2}"
+        assert len(df1) == len(df2), f"Row count mismatch: {len(df1)} != {len(df2)}"
 
     @staticmethod
     def check_data_full_data_set(df1, df2):
