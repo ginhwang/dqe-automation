@@ -30,27 +30,25 @@ pipeline {
                         --db_name="mydatabase" \
                         --db_user="$POSTGRES_SECRET_USR" \
                         --db_password="$POSTGRES_SECRET_PSW" \
-                        --html="html_report/index.html"
+                        --html-report="html_report"
                 '''
                 sh 'ls -l "PyTest DQ Framework/html_report"'
             }
         }
-
-        
     }
     post {
         always {
-                // Archive the entire html_report directory, including assets
-                archiveArtifacts artifacts: 'PyTest DQ Framework/html_report/**', allowEmptyArchive: true
+            // Archive the entire html_report directory, including assets
+            archiveArtifacts artifacts: 'PyTest DQ Framework/html_report/**', allowEmptyArchive: true
 
-                // Publish the HTML report
-                publishHTML(target: [
-                            allowMissing: false,  // Fail the pipeline if the report is missing
-                            keepAll: true,        // Keep all reports from previous runs
-                            reportDir: 'PyTest DQ Framework/html_report', // Correct directory path
-                            reportFiles: 'index.html',                          // Entry point file
-                            reportName: 'HTML Test Report'                      // Display name in Jenkins
-                ])
-            }
+            // Publish the HTML report
+            publishHTML(target: [
+                allowMissing: false,  // Fail the pipeline if the report is missing
+                keepAll: true,        // Keep all reports from previous runs
+                reportDir: 'PyTest DQ Framework/html_report', // Correct directory path
+                reportFiles: 'index.html',                    // Entry point file
+                reportName: 'HTML Test Report'                // Display name in Jenkins
+            ])
         }
+    }
 }
