@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.11.0 on win32)" generated="2025-12-29T22:07:26.227197" rpa="false" schemaversion="5">
+<suite id="s1" name="Test" source="C:\Users\Regina_Khvan\Desktop\dq_auto\dqe-automation\Robot Framework\test.robot">
+<kw name="Open Report In Chrome" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-12-29T22:07:28.205939" level="INFO">Opening browser 'chrome' to base url 'file://C:/Users/Regina_Khvan/Desktop/dq_auto/dqe-automation/Robot Framework/report.html'.</msg>
+<arg>file://${REPORT_FILE}</arg>
+<arg>chrome</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-12-29T22:07:28.204938" elapsed="4.633293"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-12-29T22:07:32.838231" elapsed="0.064711"/>
+</kw>
+<status status="PASS" start="2025-12-29T22:07:28.201930" elapsed="4.701012"/>
+</kw>
+<test id="s1-t1" name="Compare HTML Table With Parquet Dataset" line="18">
+<kw name="Extract Svg Table To Csv" owner="helper">
+<msg time="2025-12-29T22:07:36.194301" level="INFO">Found 6 columns
+col_data (all columns): [['Specialty Center', 'Hospital', 'Clinic', 'Hospital', 'Clinic', 'Specialty Center', 'Hospital', 'Clinic', 'Specialty Center', 'Hospital', 'Clinic'], ['Hospital', 'Clinic', 'Specialty Center', 'Hospital', 'Clinic', 'Specialty Center', 'Hospital', 'Clinic'], ['2025-11-03', '2025-11-03', '2025-11-03', '2025-11-02', '2025-11-02', '2025-11-01', '2025-11-01', '2025-11-01', '2025-10-31', '2025-10-31', '2025-10-31'], ['2025-10-30', '2025-10-30', '2025-10-29', '2025-10-29', '2025-10-29', '2025-10-28', '2025-10-28', '2025-10-28'], ['29', '30', '59', '48', '43', '48.67', '45', '33.5', '29', '54', '43'], ['28', '52', '31', '50', '35.5', '60', '37.33', '39.33']]
+Headers: ['Facility Type', 'Visit Date', 'Average Time Spent']</msg>
+<arg>${REPORT_FILE}</arg>
+<arg>${CSV_FILE}</arg>
+<status status="PASS" start="2025-12-29T22:07:32.904957" elapsed="3.289344"/>
+</kw>
+<kw name="Read Csv As Dataframe">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2025-12-29T22:07:36.208357" level="INFO">${df} =        Facility Type  Visit Date  Average Time Spent
+0   Specialty Center  2025-11-03               29.00
+1           Hospital  2025-11-03               30.00
+2             Clinic  2025-11-03         ...</msg>
+<var>${df}</var>
+<arg>__import__('pandas').read_csv(r'''${csv_file}''')</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2025-12-29T22:07:36.195306" elapsed="0.013051"/>
+</kw>
+<return>
+<value>${df}</value>
+<status status="PASS" start="2025-12-29T22:07:36.208357" elapsed="0.000000"/>
+</return>
+<msg time="2025-12-29T22:07:36.215972" level="INFO">${df_html} =        Facility Type  Visit Date  Average Time Spent
+0   Specialty Center  2025-11-03               29.00
+1           Hospital  2025-11-03               30.00
+2             Clinic  2025-11-03         ...</msg>
+<var>${df_html}</var>
+<arg>${CSV_FILE}</arg>
+<status status="PASS" start="2025-12-29T22:07:36.195306" elapsed="0.020666"/>
+</kw>
+<kw name="Read Parquet Dataset" owner="helper">
+<msg time="2025-12-29T22:07:36.634135" level="INFO">Total rows in file before filtering: 24908
+Example unfiltered df:      facility_type visit_date  avg_time_spent partition_date
+0            Clinic 2000-11-27           28.00        2000-11
+1            Clinic 2000-11-02           45.00        2000-11
+2          Hospital 2000-11-07           51.00        2000-11
+3          Hospital 2000-11-11           53.00        2000-11
+4  Specialty Center 2000-11-14           38.33        2000-11
+Example filtered df:          facility_type visit_date  avg_time_spent partition_date
+24900          Hospital 2025-11-01           45.00        2025-11
+24901  Specialty Center 2025-11-01           48.67        2025-11
+24902          Hospital 2025-11-02           48.00        2025-11
+24903            Clinic 2025-11-01           33.50        2025-11
+24904            Clinic 2025-11-02           43.00        2025-11</msg>
+<msg time="2025-12-29T22:07:36.645525" level="INFO">${df_parquet} =           facility_type visit_date  avg_time_spent partition_date
+24900          Hospital 2025-11-01           45.00        2025-11
+24901  Specialty Center 2025-11-01           48.67        2025-11
+24...</msg>
+<var>${df_parquet}</var>
+<arg>${PARQUET_FOLDER}</arg>
+<arg>${FILTER_DATE}</arg>
+<status status="PASS" start="2025-12-29T22:07:36.216972" elapsed="0.428553"/>
+</kw>
+<kw name="Compare Dataframes" owner="helper">
+<msg time="2025-12-29T22:07:36.682143" level="INFO">${result} = False</msg>
+<msg time="2025-12-29T22:07:36.696024" level="INFO">${diff} = {'df1_not_in_df2':        facility_type  visit_date     _merge
+0             Clinic  2025-10-28  left_only
+1             Clinic  2025-10-29  left_only
+2             Clinic  2025-10-30  left_only
+3    ...</msg>
+<var>${result}</var>
+<var>${diff}</var>
+<arg>${df_html}</arg>
+<arg>${df_parquet}</arg>
+<status status="PASS" start="2025-12-29T22:07:36.646511" elapsed="0.049513"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2025-12-29T22:07:36.711513" level="FAIL">DataFrames do not match. Differences: {'df1_not_in_df2':        facility_type  visit_date     _merge
+0             Clinic  2025-10-28  left_only
+1             Clinic  2025-10-29  left_only
+2             Clinic  2025-10-30  left_only
+3             Clinic  2025-10-31  left_only
+7           Hospital  2025-10-28  left_only
+8           Hospital  2025-10-29  left_only
+9           Hospital  2025-10-30  left_only
+10          Hospital  2025-10-31  left_only
+14  Specialty Center  2025-10-28  left_only
+15  Specialty Center  2025-10-29  left_only
+16  Specialty Center  2025-10-31  left_only, 'df2_not_in_df1': Empty DataFrame
+Columns: [facility_type, visit_date, _merge]
+Index: []}</msg>
+<arg>DataFrames do not match. Differences: ${diff}</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2025-12-29T22:07:36.698033" elapsed="0.013989">DataFrames do not match. Differences: {'df1_not_in_df2':        facility_type  visit_date     _merge
+0             Clinic  2025-10-28  left_only
+1             Clinic  2025-10-29  left_only
+2             Clinic  2025-10-30  left_only
+3             Clinic  2025-10-31  left_only
+7           Hospital  2025-10-28  left_only
+8           Hospital  2025-10-29  left_only
+9           Hospital  2025-10-30  left_only
+10          Hospital  2025-10-31  left_only
+14  Specialty Center  2025-10-28  left_only
+15  Specialty Center  2025-10-29  left_only
+16  Specialty Center  2025-10-31  left_only, 'df2_not_in_df1': Empty DataFrame
+Columns: [facility_type, visit_date, _merge]
+Index: []}</status>
+</kw>
+<arg>not ${result}</arg>
+<arg>Fail</arg>
+<arg>DataFrames do not match. Differences: ${diff}</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2025-12-29T22:07:36.697232" elapsed="0.014790">DataFrames do not match. Differences: {'df1_not_in_df2':        facility_type  visit_date     _merge
+0             Clinic  2025-10-28  left_only
+1             Clinic  2025-10-29  left_only
+2             Clinic  2025-10-30  left_only
+3             Clinic  2025-10-31  left_only
+7           Hospital  2025-10-28  left_only
+8           Hospital  2025-10-29  left_only
+9           Hospital  2025-10-30  left_only
+10          Hospital  2025-10-31  left_only
+14  Specialty Center  2025-10-28  left_only
+15  Specialty Center  2025-10-29  left_only
+16  Specialty Center  2025-10-31  left_only, 'df2_not_in_df1': Empty DataFrame
+Columns: [facility_type, visit_date, _merge]
+Index: []}</status>
+</kw>
+<doc>Extract SVG table, read parquet, compare.</doc>
+<status status="FAIL" start="2025-12-29T22:07:32.903971" elapsed="3.808604">DataFrames do not match. Differences: {'df1_not_in_df2':        facility_type  visit_date     _merge
+0             Clinic  2025-10-28  left_only
+1             Clinic  2025-10-29  left_only
+2             Clinic  2025-10-30  left_only
+3             Clinic  2025-10-31  left_only
+7           Hospital  2025-10-28  left_only
+8           Hospital  2025-10-29  left_only
+9           Hospital  2025-10-30  left_only
+10          Hospital  2025-10-31  left_only
+14  Specialty Center  2025-10-28  left_only
+15  Specialty Center  2025-10-29  left_only
+16  Specialty Center  2025-10-31  left_only, 'df2_not_in_df1': Empty DataFrame
+Columns: [facility_type, visit_date, _merge]
+Index: []}</status>
+</test>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-12-29T22:07:36.714977" elapsed="2.628508"/>
+</kw>
+<status status="FAIL" start="2025-12-29T22:07:26.234079" elapsed="13.109406"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Test" id="s1" pass="0" fail="1" skip="0">Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

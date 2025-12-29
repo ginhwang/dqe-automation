@@ -1,5 +1,6 @@
 robotframework
 robotframework-seleniumlibrary
+robotframework-databaselibrary
 pandas
 pyarrow
 selenium
